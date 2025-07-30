@@ -1,16 +1,20 @@
 "use client";
 
-import { useFormState } from 'react-dom';
+// The import has changed from 'react-dom' to 'react'
+import { useActionState } from 'react';
 import { createTask } from '@/lib/actions';
 
+// Define the shape of our form's state
+const initialState = {
+  message: '',
+};
+
 export default function NewTaskPage() {
-  const [state, formAction] = useFormState<{ message: string }, FormData>(
-    createTask,
-    { message: '' }
-  );
+  // We now use useActionState, as the error message suggested
+  const [state, formAction] = useActionState(createTask, initialState);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-6">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">Create a New Task</h1>
         
@@ -55,6 +59,13 @@ export default function NewTaskPage() {
             />
           </div>
 
+          {/* This part is new: it will show error messages from the server */}
+          {state.message && (
+            <p className="text-sm text-red-600">
+              {state.message}
+            </p>
+          )}
+
           <div>
             <button
               type="submit"
@@ -65,6 +76,6 @@ export default function NewTaskPage() {
           </div>
         </form>
       </div>
-    </div>
+    </main>
   );
 }
