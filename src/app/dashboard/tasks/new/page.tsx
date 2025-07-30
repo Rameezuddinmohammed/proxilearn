@@ -1,34 +1,20 @@
 "use client";
 
-import { useState } from 'react';
+import { useFormState } from 'react-dom';
+import { createTask } from '@/lib/actions';
 
 export default function NewTaskPage() {
-  const [task, setTask] = useState({
-    title: '',
-    description: '',
-    dueDate: ''
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setTask(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission here
-    console.log('Task submitted:', task);
-  };
+  const [state, formAction] = useFormState<{ message: string }, FormData>(
+    createTask,
+    { message: '' }
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-6">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">Create a New Task</h1>
         
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form action={formAction} className="space-y-6">
           <div>
             <label htmlFor="title" className="block text-sm font-medium text-gray-700">
               Task Title
@@ -38,8 +24,6 @@ export default function NewTaskPage() {
               id="title"
               name="title"
               required
-              value={task.title}
-              onChange={handleChange}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               placeholder="Enter task title"
             />
@@ -53,24 +37,20 @@ export default function NewTaskPage() {
               id="description"
               name="description"
               rows={4}
-              value={task.description}
-              onChange={handleChange}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               placeholder="Enter task description"
             />
           </div>
 
           <div>
-            <label htmlFor="dueDate" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="due_date" className="block text-sm font-medium text-gray-700">
               Due Date
             </label>
             <input
               type="date"
-              id="dueDate"
-              name="dueDate"
+              id="due_date"
+              name="due_date"
               required
-              value={task.dueDate}
-              onChange={handleChange}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
